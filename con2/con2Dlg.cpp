@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(Ccon2Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_HSCROLL()
 END_MESSAGE_MAP()
 
 
@@ -182,3 +183,61 @@ HCURSOR Ccon2Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void Ccon2Dlg::ChangeColor()
+{
+	// TODO: 여기에 구현 코드 추가.
+	//스크롤 컨트롤에서 현재 위치값을 얻어 온다.
+	int nRed = m_ScrollbarRed.GetScrollPos();
+	int nGreen = m_ScrollbarGreen.GetScrollPos();
+	int nBlue = m_ScrollbarBlue.GetScrollPos();
+	//스크롤의 현재 위치값을 스테틱 컨트롤에 출력한다.
+	CString strTemp;
+	strTemp.Format(_T("%3d"), nRed);
+	m_EditRed.SetWindowTextW(strTemp);
+	strTemp.Format(_T("%3d"), nGreen);
+	m_EditGreen.SetWindowTextW(strTemp);
+	strTemp.Format(_T("%3d"), nBlue);
+	m_EditBlue.SetWindowTextW(strTemp);
+
+	//스크롤 컨트롤에서 얻어온 값으로 RGB 함수로 색상조합한다.
+	m_rectColor = RGB(nRed, nGreen, nBlue);
+	//스크롤 컨트롤를 드래그한 후에 사각형을 다시 그린다.
+	InvalidateRect(&m_rectPic);
+}
+
+
+void Ccon2Dlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
+{
+	// TODO: 여기에 메시지 처리기 코드를 추가 및/또는 기본값을 호출합니다.
+
+	int nScrollPos;
+	switch (nSBCode) {
+	case SB_LINELEFT:
+		nScrollPos = pScrollBar->GetScrollPos();
+		nScrollPos -= 1;
+		pScrollBar->SetScrollPos(nScrollPos);
+		break;
+	case SB_LINERIGHT:
+		nScrollPos = pScrollBar->GetScrollPos();
+		nScrollPos += 1;
+		pScrollBar->SetScrollPos(nScrollPos);
+		break;
+	case SB_PAGELEFT:
+		nScrollPos = pScrollBar->GetScrollPos();
+		nScrollPos -= 15;
+		pScrollBar->SetScrollPos(nScrollPos);
+		break;
+	case SB_PAGERIGHT:
+		nScrollPos = pScrollBar->GetScrollPos();
+		nScrollPos += 15;
+		pScrollBar->SetScrollPos(nScrollPos);
+		break;
+	case SB_THUMBTRACK:
+		pScrollBar->SetScrollPos(nPos);
+		break;
+	}
+	ChangeColor();
+	CDialog::OnHScroll(nSBCode, nPos, pScrollBar);
+}

@@ -20,6 +20,7 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 지원입니다.
 
+	
 
 // 구현입니다.
 protected:
@@ -39,5 +40,7 @@ public:
 	CScrollBar m_ScrollbarGreen;
 	CScrollBar m_ScrollbarBlue;
 	CRect m_rectPic;
-	COLORREF m_rectColor
+	COLORREF m_rectColor;
+	void ChangeColor();
+	afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 };
